@@ -4,6 +4,10 @@ let birds = [];
 let numBirds = 5;
 let sunY;
 let sunRadius;
+let sunSizeSlider;
+let sunPositionSlider;
+let birdColorPicker;
+let birdHue = 220; // Valor inicial para el tono de los pájaros
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -11,6 +15,20 @@ function setup() {
   // Inicializar el sol
   sunRadius = width * 0.05;
   sunY = sunRadius * 2;
+  
+  // Configurar controles de la interfaz
+  sunSizeSlider = select('#sunSize');
+  sunPositionSlider = select('#sunPosition');
+  birdColorPicker = select('#birdColor');
+  
+  // Establecer valores iniciales
+  sunSizeSlider.value(sunRadius * 10);
+  sunPositionSlider.value(sunY);
+  
+  // Agregar eventos para los controles
+  sunSizeSlider.input(updateSunSize);
+  sunPositionSlider.input(updateSunPosition);
+  birdColorPicker.input(updateBirdColor);
   
   // Crear pájaros iniciales
   for (let i = 0; i < numBirds; i++) {
@@ -23,6 +41,30 @@ function setup() {
   
   // Fondo degradado
   colorMode(HSB, 360, 100, 100, 1);
+}
+
+// Funciones para actualizar elementos visuales según los controles
+function updateSunSize() {
+  sunRadius = sunSizeSlider.value() / 10;
+}
+
+function updateSunPosition() {
+  sunY = sunPositionSlider.value();
+}
+
+function updateBirdColor() {
+  // Convertir el valor hexadecimal del color a HSB
+  let c = color(birdColorPicker.value());
+  colorMode(RGB);
+  let r = red(c);
+  let g = green(c);
+  let b = blue(c);
+  colorMode(HSB, 360, 100, 100, 1);
+  
+  // Actualizar el color de los pájaros existentes
+  for (let bird of birds) {
+    bird.updateColor(c);
+  }
 }
 
 function draw() {
@@ -90,6 +132,10 @@ function drawSun() {
   fill(40, 100, 100);
   noStroke();
   ellipse(width * 0.8, sunY, sunRadius);
+  
+  // Mostrar valores actuales en la interfaz
+  sunSizeSlider.value(sunRadius * 10);
+  sunPositionSlider.value(sunY);
   
   pop();
 }
@@ -241,6 +287,11 @@ class Bird {
       this.x = -20;
       this.y = random(height * 0.1, height * 0.4);
     }
+  }
+  
+  // Método para actualizar el color del pájaro
+  updateColor(newColor) {
+    this.color = newColor;
   }
   
   display() {

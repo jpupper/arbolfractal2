@@ -8,6 +8,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
+    <div id="controls">
+        <div class="control-group">
+            <label for="sunSize">Tamaño del Sol:</label>
+            <input type="range" id="sunSize" min="10" max="100" value="50">
+        </div>
+        <div class="control-group">
+            <label for="sunPosition">Posición del Sol:</label>
+            <input type="range" id="sunPosition" min="50" max="400" value="100">
+        </div>
+        <div class="control-group">
+            <label for="birdColor">Color de Pájaros:</label>
+            <input type="color" id="birdColor" value="#4B9CD3">
+        </div>
+    </div>
     <script src="sketch.js"></script>
 </body>
 </html>
