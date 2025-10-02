@@ -8,6 +8,7 @@ let sunSizeSlider;
 let sunPositionSlider;
 let birdColorPicker;
 let birdHue = 220; // Valor inicial para el tono de los pájaros
+let monkey; // Variable para el mono animado
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -38,6 +39,9 @@ function setup() {
   // Crear un árbol inicial en el centro
   let initialTree = new Tree(width / 2, height, 120, 4);
   trees.push(initialTree);
+  
+  // Inicializar el mono
+  monkey = new Monkey();
   
   // Fondo degradado
   colorMode(HSB, 360, 100, 100, 1);
@@ -90,6 +94,10 @@ function draw() {
     tree.grow();
     tree.display();
   }
+  
+  // Actualizar y mostrar el mono
+  monkey.update();
+  monkey.display();
 }
 
 function mousePressed() {
@@ -322,4 +330,121 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   sunRadius = width * 0.05;
   sunY = sunRadius * 2;
+}
+
+class Monkey {
+  constructor() {
+    // Inicializar el mono en el horizonte (lado derecho)
+    this.x = width + 100;
+    this.y = height - 60; // Justo encima del suelo
+    this.size = 40;
+    this.speed = 1.5;
+    this.swingAngle = 0;
+    this.swingSpeed = 0.1;
+    this.armAngle = 0;
+    this.legAngle = 0;
+    this.tailAngle = 0;
+    
+    // Colores del mono
+    this.bodyColor = color(30, 80, 60); // Marrón
+    this.faceColor = color(20, 60, 80); // Marrón claro
+  }
+  
+  update() {
+    // Mover el mono de derecha a izquierda
+    this.x -= this.speed;
+    
+    // Animar las extremidades mientras camina
+    this.armAngle = sin(frameCount * 0.1) * 0.3;
+    this.legAngle = sin(frameCount * 0.1) * 0.2;
+    this.tailAngle = sin(frameCount * 0.05) * 0.5;
+    
+    // Si el mono sale de la pantalla, reiniciar su posición
+    if (this.x < -100) {
+      this.x = width + 100;
+    }
+  }
+  
+  display() {
+    push();
+    translate(this.x, this.y);
+    
+    // Dibujar cola
+    push();
+    rotate(sin(frameCount * 0.05) * 0.3 + PI/4);
+    stroke(this.bodyColor);
+    strokeWeight(5);
+    noFill();
+    bezier(0, 0, 10, -20, 30, -10, 40, -30);
+    pop();
+    
+    // Cuerpo
+    noStroke();
+    fill(this.bodyColor);
+    ellipse(0, 0, this.size, this.size * 1.2);
+    
+    // Piernas
+    push();
+    translate(0, this.size * 0.5);
+    // Pierna izquierda
+    push();
+    rotate(this.legAngle - 0.2);
+    rect(-this.size * 0.3, 0, this.size * 0.2, this.size * 0.5, 5);
+    pop();
+    
+    // Pierna derecha
+    push();
+    rotate(-this.legAngle - 0.2);
+    rect(this.size * 0.1, 0, this.size * 0.2, this.size * 0.5, 5);
+    pop();
+    pop();
+    
+    // Brazos
+    push();
+    // Brazo izquierdo
+    push();
+    translate(-this.size * 0.4, -this.size * 0.1);
+    rotate(this.armAngle - 0.5);
+    rect(-this.size * 0.15, 0, this.size * 0.15, this.size * 0.4, 5);
+    pop();
+    
+    // Brazo derecho
+    push();
+    translate(this.size * 0.4, -this.size * 0.1);
+    rotate(-this.armAngle - 0.5);
+    rect(0, 0, this.size * 0.15, this.size * 0.4, 5);
+    pop();
+    pop();
+    
+    // Cabeza
+    fill(this.faceColor);
+    ellipse(0, -this.size * 0.6, this.size * 0.8, this.size * 0.7);
+    
+    // Orejas
+    fill(this.bodyColor);
+    ellipse(-this.size * 0.3, -this.size * 0.8, this.size * 0.2, this.size * 0.3);
+    ellipse(this.size * 0.3, -this.size * 0.8, this.size * 0.2, this.size * 0.3);
+    
+    // Ojos
+    fill(255);
+    ellipse(-this.size * 0.15, -this.size * 0.65, this.size * 0.15, this.size * 0.15);
+    ellipse(this.size * 0.15, -this.size * 0.65, this.size * 0.15, this.size * 0.15);
+    
+    // Pupilas
+    fill(0);
+    ellipse(-this.size * 0.15, -this.size * 0.65, this.size * 0.05, this.size * 0.05);
+    ellipse(this.size * 0.15, -this.size * 0.65, this.size * 0.05, this.size * 0.05);
+    
+    // Hocico
+    fill(this.faceColor);
+    ellipse(0, -this.size * 0.5, this.size * 0.3, this.size * 0.2);
+    
+    // Boca
+    noFill();
+    stroke(0);
+    strokeWeight(1);
+    arc(0, -this.size * 0.45, this.size * 0.2, this.size * 0.1, 0, PI);
+    
+    pop();
+  }
 }
