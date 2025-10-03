@@ -1,27 +1,128 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Árboles Fractales Generativos</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <title>3D World with Three.js</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #gameUI {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        #scoreContainer {
+            margin-bottom: 10px;
+        }
+        #livesContainer {
+            display: flex;
+            gap: 10px;
+        }
+        .life {
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            z-index: 100;
+        }
+        #startScreen h1, #gameOverScreen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        #startScreen p, #gameOverScreen p {
+            font-size: 24px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            text-align: center;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #gameOverScreen {
+            display: none;
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
-    <div id="controls">
-        <div class="control-group">
-            <label for="sunSize">Tamaño del Sol:</label>
-            <input type="range" id="sunSize" min="10" max="100" value="50">
-        </div>
-        <div class="control-group">
-            <label for="sunPosition">Posición del Sol:</label>
-            <input type="range" id="sunPosition" min="50" max="400" value="100">
-        </div>
-        <div class="control-group">
-            <label for="birdColor">Color de Pájaros:</label>
-            <input type="color" id="birdColor" value="#4B9CD3">
+    <div id="gameUI">
+        <div id="scoreContainer">Puntos: <span id="score">0</span></div>
+        <div id="livesContainer">
+            <div id="life1" class="life"></div>
+            <div id="life2" class="life"></div>
+            <div id="life3" class="life"></div>
         </div>
     </div>
-    <script src="sketch.js"></script>
+    
+    <div id="controls">
+        Use WASD o Flechas para moverte<br>
+        Mantén SHIFT para correr
+    </div>
+    
+    <div id="startScreen">
+        <h1>Recolector de Cubos</h1>
+        <p>Recoge los cubos verdes para ganar puntos. ¡Evita los cubos rojos o perderás vidas!</p>
+        <button id="startButton">Comenzar Juego</button>
+    </div>
+    
+    <div id="gameOverScreen">
+        <h1>¡Juego Terminado!</h1>
+        <p>Tu puntuación final: <span id="finalScore">0</span></p>
+        <button id="restartButton">Jugar de Nuevo</button>
+    </div>
+    
+    <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
